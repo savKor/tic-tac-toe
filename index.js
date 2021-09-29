@@ -76,84 +76,94 @@ renderMatrix()
 const winningCombination = 3;
 
 //создание матрицы для проверки
-function creatMatrixForCheckingTheWinner(cell) {
+function creatMatrixForCheckingTheWinner(centerRow, centerColumn) {
   var matrixToCheck = [];
-  var matrixСenter = cell
-  matrixСenter = matrixСenter.id.split('_');
-  var centerRow=matrixСenter[0]
-  var centerCell=matrixСenter[1]
-  console.log(centerRow)
-  console.log(centerCell)
   var matrixRow = winningCombination*2-1;
   var matrixCell = winningCombination*2-1;
   for(var i=0; i<matrixRow; i++) {
-    matrixToCheck[i] = getMatrixRowWithElementsFromMainMatrix(matrixCell);
-    edOriginalRowIndex(centerRow, centerCell)
+    var rowIndex = centerRow-winningCombination+1+i;
+    matrixToCheck[i] = getMatrixRowWithElementsFromMainMatrix(matrixCell, rowIndex, centerColumn);
   }
   console.log(matrixToCheck[winningCombination][winningCombination])
-  return matrix
+  return matrixToCheck
 }
 
 
-function getMatrixRowWithElementsFromMainMatrix(size) {
-  var row = []
-  for (var j=0; j<size; j++) {
-    row[j]=undefined;
+function getMatrixRowWithElementsFromMainMatrix(size, rowIndex, centerColumn) {
+  let row = []
+  for (let j=0; j<size; j++) {
+    let columIndex = centerColumn-winningCombination+1+j;
+    let originalCell = document.getElementById(rowIndex+"_"+columIndex)
+    if (originalCell) {
+      
+    }
+    row[j]=originalCell.className
   }
   return row;
 }
 
 
+/**
+Проверка по горизонтали
+1.Сделать вариант проверки слева и справа от центральной клетки
+2.Проверка должна проверять с центральной клетки
+3.Провести проверку со всех сторон центральной клетки
 
-
-function edOriginalRowIndex(centerRow, centerCell) {
-  for (let originalRowIndex = centerRow-winningCombination-1; originalRowIndex < centerRow+winningCombination-1; originalRowIndex++) {
-    if (originalRowIndex<0||originalRowIndex<matrix.length) {
-      break
-    }  else {
-      matrixToCheck[i] = edOriginalCellIndex(matrixCell, centerCell);
-      matrixToCheck[i]=matrix[originalRowIndex];
-    }
-  }
-} 
-
-function edOriginalCellIndex(size, centerCell) {
-  for (var j=0; j<size; j++) {
-    for (let originalCellIndex = centerCell-winningCombination-1; originalCellIndex < centerCell+winningCombination-1; originalCellIndex++) {
-      if (originalCellIndex<0||originalCellIndex<matrix.length) {
-        break
-      }  else {
-        row[j]=row[originalCellIndex];
-      }
+function rowCheck(cell, currentSymbol, centerRow, centerColum, matrixForChecking) {
+  var winMatrix = [];
+  for (let i = 0; i < matrixForChecking[winningCombination].length; i++) {
+    var cellAfterCenter = document.getElementById(centerRow+"_"+centerColum-i);
+    if (cellAfterCenter.classList.contains(currentSymbol)) {
+      
+    } else {
+      break;
     }
   }
 }
+*/
 
+function rowCheck(data) {
+  const {matrixСenter, currentSymbol, centerRow, centerColum, matrixForChecking} = data;
+  var cellClass = []
+  for (var i = 0; i < matrixForChecking[winningCombination].length; i++) {
+    var cellClass = document.getElementById(centerRow+"_"+(centerColum+i-winningCombination-1));
+     console.log(cellClass)
+  }
+  for (var i = 0; i < matrixForChecking[winningCombination].length; i++) {
+  }
+  return false;
+}
 
+/** 
 
+function columCheck(currentSymbol, centerRow, centerColum, matrixForChecking) {
+  for (var i = 0; i < matrixForChecking[winningCombination].length; i++) {
+    var cellClass = document.getElementById(centerRow+i-winningCombination-1+"_"+centerColum);
+    var checkedElement = matrixForChecking[centerRow+i-winningCombination-1][centerColum];
+  }
+  return false;
+}
+
+function leftDiagonalCheck(currentSymbol, centerRow, centerColum, matrixForChecking) {
+  for (var i = 0; i < matrixForChecking[winningCombination].length; i++) {
+    var cellClass = document.getElementById(centerRow+i-winningCombination-1+"_"+centerColum+i-winningCombination-1);
+    var checkedElement = matrixForChecking[centerRow+i-winningCombination-1][centerColum+i-winningCombination-1];
+  }
+  return false;
+}
+
+function rightDiagonalCheck(currentSymbol, centerRow, centerColum, matrixForChecking) {
+  for (var i = 0; i < matrixForChecking[winningCombination].length; i++) {
+    var cellClass = document.getElementById(centerRow+winningCombination-1-i+"_"+centerColum+winningCombination-1-i);
+    var checkedElement = matrixForChecking[centerRow+winningCombination-1-i][centerColum+winningCombination-1-i];
+  }
+  return false;
+}
 function checkWin() {
 }
 
 function boardCheck() {
 }
-
-
-/** 
-
-//Проверка строки 
-
-for ()
-
-//Проверка столбца
-
-
-//Провека диагонали
-
-
-//
-/** 
-  Нужно сделать отрисовку крестиков и ноликов.
-    1.Написать как при нажатие на клетку будет рисоваться рисунок крестика или нолика
 */
 
 const crossChose = 'cross'
@@ -162,7 +172,7 @@ const cellElements = document.querySelectorAll('.cell')
 const winningMessage = document.getElementById('winningMessage')
 const restartButton = document.getElementById('restartButton')
 const winningMessageText = document.getElementById('winningMessageText')
-let turn
+let playerTurn
 let currentSymbol
 
 
@@ -183,30 +193,36 @@ startGame()
 function setFigure() {
   board.classList.remove(crossChose)
   board.classList.remove(circleChose)
-  if (turn) {
+  if (playerTurn) {
     board.classList.add(circleChose)
   } else {
     board.classList.add(crossChose)
   }
 }
 
+//функция добавляет к 
 function placeMark(cell, currentSymbol) {
   cell.classList.add(currentSymbol)
 }
 
+
+//функция для начала работы с матрицей и рисования крестиков и ноликов.
 function handleClick(e) {
   const cell = e.target
   console.log(e);
-  if (turn) {
+  if (playerTurn) {
     currentSymbol = circleChose
   } else {
     currentSymbol = crossChose
   }
-  console.log(currentSymbol)
-  var matrixForChecking = creatMatrixForCheckingTheWinner(cell)
-  console.log(matrixForChecking)
+  console.log(currentSymbol);
+  var matrixСenter = cell
+  matrixСenter = matrixСenter.id.split('_');
+  var centerRow=matrixСenter[0]
+  var centerColumn=matrixСenter[1]
+  var matrixForChecking = creatMatrixForCheckingTheWinner(centerRow, centerColumn)
   placeMark(cell, currentSymbol)
-  if (checkWin()) {
+  if (rowCheck({matrixСenter, currentSymbol, centerRow, centerColum: centerColumn, matrixForChecking})) {
     endGame(false)
   } //else is (checkDraw()) {endGame(true)} 
     else {
@@ -215,9 +231,9 @@ function handleClick(e) {
   }
 }
 
-
+//смена хода
 function swapTurns() {
-  turn = !turn
+  playerTurn = !playerTurn
 }
 
 restartButton.addEventListener('click', startGame)
@@ -234,12 +250,8 @@ function endGame(draw) {
 
 /**
 
-
 // надо придумать вариант для ничьи.
-
 function checkDraw() {
-
 }
-
 
 **/
