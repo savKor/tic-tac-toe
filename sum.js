@@ -1,21 +1,20 @@
 let matrixOne = [[4,2,7],[4,23,7],[3,2,9]];
-let matrixTwo = [[9,21,7],[1,12,6],[25,2,5]];
+let matrixTwo = [[9,21,7],[1,'df',6],[25,2,5]];
+
 let array = matrixOne.length;
 
 function sumOfMatrix() {
     let matrixSum=[]
-    let a = 3;
-    let b = 3;
-    for (i=0; i<a; i++) {
+    for (i=0; i<array; i++) {
         let rowNumber = i;
-        matrixSum[i]=sumOfNumbers(rowNumber,b);
+        matrixSum[i]=sumOfArrayElements(rowNumber);
     }
     return matrixSum;
 }
 
-function sumOfNumbers(rowNumber,b) {
+function sumOfArrayElements(rowNumber) {
     let sum = []
-    for (j=0; j<b; j++) {
+    for (j=0; j<array; j++) {
         let columnNumber = j;
         sum[j] = matrixOne[rowNumber][columnNumber] + matrixTwo[rowNumber][columnNumber]
     }

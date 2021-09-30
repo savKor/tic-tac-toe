@@ -73,10 +73,10 @@ renderMatrix()
     3.Написать функцию для проверки в сетке
 */
 
-const winningCombination = 3;
+const winningCombination = 4;
 
 //создание матрицы для проверки
-function creatMatrixForCheckingTheWinner(centerRow, centerColumn) {
+function creatMatrixForCheckingTheWinner(centerRow, centerColumn, currentSymbol) {
   var matrixToCheck = [];
   var matrixRow = winningCombination*2-1;
   var matrixCell = winningCombination*2-1;
@@ -84,20 +84,21 @@ function creatMatrixForCheckingTheWinner(centerRow, centerColumn) {
     var rowIndex = centerRow-winningCombination+1+i;
     matrixToCheck[i] = getMatrixRowWithElementsFromMainMatrix(matrixCell, rowIndex, centerColumn);
   }
-  console.log(matrixToCheck[winningCombination][winningCombination])
+  matrixToCheck[winningCombination-1][winningCombination-1] = "cell "+currentSymbol
   return matrixToCheck
 }
-
 
 function getMatrixRowWithElementsFromMainMatrix(size, rowIndex, centerColumn) {
   let row = []
   for (let j=0; j<size; j++) {
     let columIndex = centerColumn-winningCombination+1+j;
-    let originalCell = document.getElementById(rowIndex+"_"+columIndex)
-    if (originalCell) {
-      
+    let originalCell
+    if (rowIndex<0||rowIndex>=matrix.length||columIndex<0||columIndex>=matrix.length) {
+      originalCell = undefined
+    } else {
+      originalCell = document.getElementById(rowIndex+"_"+columIndex).className
     }
-    row[j]=originalCell.className
+    row[j]=originalCell
   }
   return row;
 }
@@ -122,48 +123,99 @@ function rowCheck(cell, currentSymbol, centerRow, centerColum, matrixForChecking
 }
 */
 
-function rowCheck(data) {
-  const {matrixСenter, currentSymbol, centerRow, centerColum, matrixForChecking} = data;
-  var cellClass = []
-  for (var i = 0; i < matrixForChecking[winningCombination].length; i++) {
-    var cellClass = document.getElementById(centerRow+"_"+(centerColum+i-winningCombination-1));
-     console.log(cellClass)
+function rowCheck(matrixForChecking, currentSymbol) {
+  var arrayForCheck = []
+  for (var i = 0; i < matrixForChecking.length; i++) {
+    var cell = i;
+    arrayForCheck[i] = matrixForChecking[winningCombination-1][cell];
   }
-  for (var i = 0; i < matrixForChecking[winningCombination].length; i++) {
+  
+  console.log(arrayForCheck)
+  var count = 0;
+  for (var i = 0; i < arrayForCheck.length; i++) {
+      if (arrayForCheck[i] != "cell "+currentSymbol) {
+        count = 0;
+      } else {
+        count += 1;
+        if (winningCombination <= count) {
+          return true;
+        }
+      }
+    }
+  return false;
+}
+
+function columCheck(matrixForChecking, currentSymbol) {
+  var arrayForCheck = []
+  for (var i = 0; i < matrixForChecking.length; i++) {
+    var cell = i;
+    arrayForCheck[i] = matrixForChecking[cell][winningCombination-1];
   }
+  
+  console.log(arrayForCheck)
+  var count = 0;
+  for (var i = 0; i < arrayForCheck.length; i++) {
+      if (arrayForCheck[i] != "cell "+currentSymbol) {
+        count = 0;
+      } else {
+        count += 1;
+        if (winningCombination <= count) {
+          return true;
+        }
+      }
+    }
+  return false;
+}
+
+function leftDiagonalCheck(matrixForChecking, currentSymbol) {
+  var arrayForCheck = []
+  for (var i = 0; i < matrixForChecking.length; i++) {
+    var cell = i;
+    arrayForCheck[i] = matrixForChecking[cell][cell];
+  }
+  
+  console.log(arrayForCheck)
+  var count = 0;
+  for (var i = 0; i < arrayForCheck.length; i++) {
+      if (arrayForCheck[i] != "cell "+currentSymbol) {
+        count = 0;
+      } else {
+        count += 1;
+        if (winningCombination <= count) {
+          return true;
+        }
+      }
+    }
+  return false;
+}
+
+function rightDiagonalCheck(matrixForChecking, currentSymbol) {
+  var arrayForCheck = []
+  for (var i = 0; i < matrixForChecking.length; i++) {
+    var cell = matrixForChecking.length-1-i;
+    arrayForCheck[i] = matrixForChecking[cell][cell];
+  }
+  
+  console.log(arrayForCheck)
+  var count = 0;
+  for (var i = 0; i < arrayForCheck.length; i++) {
+      if (arrayForCheck[i] != "cell "+currentSymbol) {
+        count = 0;
+      } else {
+        count += 1;
+        if (winningCombination <= count) {
+          return true;
+        }
+      }
+    }
   return false;
 }
 
 /** 
 
-function columCheck(currentSymbol, centerRow, centerColum, matrixForChecking) {
-  for (var i = 0; i < matrixForChecking[winningCombination].length; i++) {
-    var cellClass = document.getElementById(centerRow+i-winningCombination-1+"_"+centerColum);
-    var checkedElement = matrixForChecking[centerRow+i-winningCombination-1][centerColum];
-  }
-  return false;
-}
-
-function leftDiagonalCheck(currentSymbol, centerRow, centerColum, matrixForChecking) {
-  for (var i = 0; i < matrixForChecking[winningCombination].length; i++) {
-    var cellClass = document.getElementById(centerRow+i-winningCombination-1+"_"+centerColum+i-winningCombination-1);
-    var checkedElement = matrixForChecking[centerRow+i-winningCombination-1][centerColum+i-winningCombination-1];
-  }
-  return false;
-}
-
-function rightDiagonalCheck(currentSymbol, centerRow, centerColum, matrixForChecking) {
-  for (var i = 0; i < matrixForChecking[winningCombination].length; i++) {
-    var cellClass = document.getElementById(centerRow+winningCombination-1-i+"_"+centerColum+winningCombination-1-i);
-    var checkedElement = matrixForChecking[centerRow+winningCombination-1-i][centerColum+winningCombination-1-i];
-  }
-  return false;
-}
 function checkWin() {
 }
 
-function boardCheck() {
-}
 */
 
 const crossChose = 'cross'
@@ -220,9 +272,10 @@ function handleClick(e) {
   matrixСenter = matrixСenter.id.split('_');
   var centerRow=matrixСenter[0]
   var centerColumn=matrixСenter[1]
-  var matrixForChecking = creatMatrixForCheckingTheWinner(centerRow, centerColumn)
+  var matrixForChecking = creatMatrixForCheckingTheWinner(centerRow, centerColumn, currentSymbol)
+  console.log(matrixForChecking)
   placeMark(cell, currentSymbol)
-  if (rowCheck({matrixСenter, currentSymbol, centerRow, centerColum: centerColumn, matrixForChecking})) {
+  if (columCheck(matrixForChecking, currentSymbol)||rightDiagonalCheck(matrixForChecking, currentSymbol)||leftDiagonalCheck(matrixForChecking, currentSymbol)||rowCheck(matrixForChecking, currentSymbol)) {
     endGame(false)
   } //else is (checkDraw()) {endGame(true)} 
     else {
