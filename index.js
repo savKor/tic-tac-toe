@@ -73,7 +73,7 @@ renderMatrix()
     3.Написать функцию для проверки в сетке
 */
 
-const winningCombination = 4;
+const winningCombination = 3;
 
 //создание матрицы для проверки
 function creatMatrixForCheckingTheWinner(centerRow, centerColumn, currentSymbol) {
@@ -130,7 +130,6 @@ function rowCheck(matrixForChecking, currentSymbol) {
     arrayForCheck[i] = matrixForChecking[winningCombination-1][cell];
   }
   
-  console.log(arrayForCheck)
   var count = 0;
   for (var i = 0; i < arrayForCheck.length; i++) {
       if (arrayForCheck[i] != "cell "+currentSymbol) {
@@ -152,7 +151,6 @@ function columCheck(matrixForChecking, currentSymbol) {
     arrayForCheck[i] = matrixForChecking[cell][winningCombination-1];
   }
   
-  console.log(arrayForCheck)
   var count = 0;
   for (var i = 0; i < arrayForCheck.length; i++) {
       if (arrayForCheck[i] != "cell "+currentSymbol) {
@@ -173,8 +171,7 @@ function leftDiagonalCheck(matrixForChecking, currentSymbol) {
     var cell = i;
     arrayForCheck[i] = matrixForChecking[cell][cell];
   }
-  
-  console.log(arrayForCheck)
+
   var count = 0;
   for (var i = 0; i < arrayForCheck.length; i++) {
       if (arrayForCheck[i] != "cell "+currentSymbol) {
@@ -192,8 +189,8 @@ function leftDiagonalCheck(matrixForChecking, currentSymbol) {
 function rightDiagonalCheck(matrixForChecking, currentSymbol) {
   var arrayForCheck = []
   for (var i = 0; i < matrixForChecking.length; i++) {
-    var cell = matrixForChecking.length-1-i;
-    arrayForCheck[i] = matrixForChecking[cell][cell];
+    var cell = i; 
+    arrayForCheck[i] = matrixForChecking[cell][matrixForChecking.length-1-cell];
   }
   
   console.log(arrayForCheck)
@@ -275,7 +272,7 @@ function handleClick(e) {
   var matrixForChecking = creatMatrixForCheckingTheWinner(centerRow, centerColumn, currentSymbol)
   console.log(matrixForChecking)
   placeMark(cell, currentSymbol)
-  if (columCheck(matrixForChecking, currentSymbol)||rightDiagonalCheck(matrixForChecking, currentSymbol)||leftDiagonalCheck(matrixForChecking, currentSymbol)||rowCheck(matrixForChecking, currentSymbol)) {
+  if (rightDiagonalCheck(matrixForChecking, currentSymbol)||leftDiagonalCheck(matrixForChecking, currentSymbol)||columCheck(matrixForChecking, currentSymbol)||rowCheck(matrixForChecking, currentSymbol)) {
     endGame(false)
   } //else is (checkDraw()) {endGame(true)} 
     else {
