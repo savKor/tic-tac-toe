@@ -1,6 +1,8 @@
 const board = document.getElementById('board')
 
-
+const winningCombination = 3;
+ 
+const matrixSize = 6
 
 /** 
 
@@ -53,10 +55,10 @@ function renderRow (row, rowIndex) {
   }
 }
 
-function renderCell (rowIndex,columIndex,rowElement) {
+function renderCell (rowIndex,columnIndex,rowElement) {
   var newDiv = document.createElement("div");
   newDiv.className = 'cell';
-  newDiv.id = rowIndex+"_"+columIndex;
+  newDiv.id = rowIndex+"_"+columnIndex;
   rowElement.appendChild(newDiv);
 }
 
@@ -73,9 +75,6 @@ renderMatrix()
     3.Написать функцию для проверки в сетке
 */
 
-const winningCombination = 3;
-
-//создание матрицы для проверки
 function creatMatrixForCheckingTheWinner(centerRow, centerColumn, currentSymbol) {
   var matrixToCheck = [];
   var matrixRow = winningCombination*2-1;
@@ -91,12 +90,12 @@ function creatMatrixForCheckingTheWinner(centerRow, centerColumn, currentSymbol)
 function getMatrixRowWithElementsFromMainMatrix(size, rowIndex, centerColumn) {
   let row = []
   for (let j=0; j<size; j++) {
-    let columIndex = centerColumn-winningCombination+1+j;
+    let columnIndex = centerColumn-winningCombination+1+j;
     let originalCell
-    if (rowIndex<0||rowIndex>=matrix.length||columIndex<0||columIndex>=matrix.length) {
+    if (rowIndex<0||rowIndex>=matrix.length||columnIndex<0||columnIndex>=matrix.length) {
       originalCell = undefined
     } else {
-      originalCell = document.getElementById(rowIndex+"_"+columIndex).className
+      originalCell = document.getElementById(rowIndex+"_"+columnIndex).className
     }
     row[j]=originalCell
   }
@@ -109,18 +108,6 @@ function getMatrixRowWithElementsFromMainMatrix(size, rowIndex, centerColumn) {
 1.Сделать вариант проверки слева и справа от центральной клетки
 2.Проверка должна проверять с центральной клетки
 3.Провести проверку со всех сторон центральной клетки
-
-function rowCheck(cell, currentSymbol, centerRow, centerColum, matrixForChecking) {
-  var winMatrix = [];
-  for (let i = 0; i < matrixForChecking[winningCombination].length; i++) {
-    var cellAfterCenter = document.getElementById(centerRow+"_"+centerColum-i);
-    if (cellAfterCenter.classList.contains(currentSymbol)) {
-      
-    } else {
-      break;
-    }
-  }
-}
 */
 
 function rowCheck(matrixForChecking, currentSymbol) {
@@ -144,7 +131,7 @@ function rowCheck(matrixForChecking, currentSymbol) {
   return false;
 }
 
-function columCheck(matrixForChecking, currentSymbol) {
+function columnCheck(matrixForChecking, currentSymbol) {
   var arrayForCheck = []
   for (var i = 0; i < matrixForChecking.length; i++) {
     var cell = i;
@@ -193,7 +180,6 @@ function rightDiagonalCheck(matrixForChecking, currentSymbol) {
     arrayForCheck[i] = matrixForChecking[cell][matrixForChecking.length-1-cell];
   }
   
-  console.log(arrayForCheck)
   var count = 0;
   for (var i = 0; i < arrayForCheck.length; i++) {
       if (arrayForCheck[i] != "cell "+currentSymbol) {
@@ -270,10 +256,9 @@ function handleClick(e) {
   var centerRow=matrixСenter[0]
   var centerColumn=matrixСenter[1]
   var matrixForChecking = creatMatrixForCheckingTheWinner(centerRow, centerColumn, currentSymbol)
-  console.log(matrixForChecking)
   placeMark(cell, currentSymbol)
-  if (rightDiagonalCheck(matrixForChecking, currentSymbol)||leftDiagonalCheck(matrixForChecking, currentSymbol)||columCheck(matrixForChecking, currentSymbol)||rowCheck(matrixForChecking, currentSymbol)) {
-    endGame(false)
+  if (rowCheck(matrixForChecking, currentSymbol)||columnCheck(matrixForChecking, currentSymbol)||rightDiagonalCheck(matrixForChecking, currentSymbol)||leftDiagonalCheck(matrixForChecking, currentSymbol)) {
+    endGame(false, currentSymbol)
   } //else is (checkDraw()) {endGame(true)} 
     else {
     swapTurns()
@@ -292,7 +277,11 @@ function endGame(draw) {
   if (draw) {
     winningMessageText.innerText = 'DRAW!'
   } else {
-    winningMessageText.innerText = 'VICTORY!'
+    if (currentSymbol=circleChose) {
+      winningMessageText.innerText = 'CIRCLE WINS!'
+    } else {
+      winningMessageText.innerText = 'CROSS WINS!'
+    }
   }
   winningMessage.classList.add('show')
 }
