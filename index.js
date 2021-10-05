@@ -1,39 +1,26 @@
 const board = document.getElementById('board')
-
-const winningCombination = 3;
- 
-const matrixSize = 6
-
-/** 
-
-  Нужно выполнить создание div через двумерный массив.
-    1.Создание двумерного массива
-    2.Связаться с элементами внутри двумерного массива.
-    3.Задать значение на каждый элемент, чтобы создавался div.
-  Чтобы строки и клетки доски создавались в соответсвие элемента массива.
-    1.
-  И ещё дать этим div-ам сразу название их класса.
-*/
+let matrixSize=6;
+let winningCombination=3;
 
 
 function createMatrix (){
-  var matrix = [];
-  var n = 6, m = 6;
-  for(var i=0; i<n; i++) {
+  let matrix = [];
+  let n = matrixSize, m = matrixSize;
+  for(let i=0; i<n; i++) {
       matrix[i] = getMatrixRowWithEmptyElement(m);
   }
   return matrix
 }
 
 function getMatrixRowWithEmptyElement(size) {
-  var row = []
-  for (var j=0; j<size; j++) {
+  let row = []
+  for (let j=0; j<size; j++) {
     row[j]=undefined;
   }
   return row;
 }
 
-var matrix = createMatrix();
+let matrix = createMatrix();
 
 function renderMatrix() {
   for (let i = 0; i < matrix.length; i++) {
@@ -44,7 +31,7 @@ function renderMatrix() {
 
 
 function renderRow (row, rowIndex) {
-  var newDiv = document.createElement("div");
+  let newDiv = document.createElement("div");
   newDiv.className = 'row';
   newDiv.id = 'row'+rowIndex;
   board.appendChild(newDiv);
@@ -56,7 +43,7 @@ function renderRow (row, rowIndex) {
 }
 
 function renderCell (rowIndex,columnIndex,rowElement) {
-  var newDiv = document.createElement("div");
+  let newDiv = document.createElement("div");
   newDiv.className = 'cell';
   newDiv.id = rowIndex+"_"+columnIndex;
   rowElement.appendChild(newDiv);
@@ -64,23 +51,12 @@ function renderCell (rowIndex,columnIndex,rowElement) {
 
 renderMatrix()
 
-/** 
-  Нужно сделать проверку двумерного массива.
-    1.При нажатие на клетку у нас должна образовываться матрица проверки выиграша
-      (матрица, которая служит для проверки выйиграша игрока. сама матрица имеет размер winningCombination*2-1)
-    2.Написать функцию проверки
-      1.Проверка горизонтали
-      2.Проверка вертикали
-      3.Проверка по диагонали
-    3.Написать функцию для проверки в сетке
-*/
-
 function creatMatrixForCheckingTheWinner(centerRow, centerColumn, currentSymbol) {
-  var matrixToCheck = [];
-  var matrixRow = winningCombination*2-1;
-  var matrixCell = winningCombination*2-1;
-  for(var i=0; i<matrixRow; i++) {
-    var rowIndex = centerRow-winningCombination+1+i;
+  let matrixToCheck = [];
+  let matrixRow = winningCombination*2-1;
+  let matrixCell = winningCombination*2-1;
+  for(let i=0; i<matrixRow; i++) {
+    let rowIndex = centerRow-winningCombination+1+i;
     matrixToCheck[i] = getMatrixRowWithElementsFromMainMatrix(matrixCell, rowIndex, centerColumn);
   }
   matrixToCheck[winningCombination-1][winningCombination-1] = "cell "+currentSymbol
@@ -91,24 +67,16 @@ function getMatrixRowWithElementsFromMainMatrix(size, rowIndex, centerColumn) {
   let row = []
   for (let j=0; j<size; j++) {
     let columnIndex = centerColumn-winningCombination+1+j;
-    let originalCell
+    let cellClassName
     if (rowIndex<0||rowIndex>=matrix.length||columnIndex<0||columnIndex>=matrix.length) {
-      originalCell = undefined
+      cellClassName = undefined
     } else {
-      originalCell = document.getElementById(rowIndex+"_"+columnIndex).className
+      cellClassName = document.getElementById(rowIndex+"_"+columnIndex).className
     }
-    row[j]=originalCell
+    row[j]=cellClassName
   }
   return row;
 }
-
-
-/**
-Проверка по горизонтали
-1.Сделать вариант проверки слева и справа от центральной клетки
-2.Проверка должна проверять с центральной клетки
-3.Провести проверку со всех сторон центральной клетки
-*/
 
 function rowCheck(matrixForChecking, currentSymbol) {
   var arrayForCheck = []
@@ -194,13 +162,6 @@ function rightDiagonalCheck(matrixForChecking, currentSymbol) {
   return false;
 }
 
-/** 
-
-function checkWin() {
-}
-
-*/
-
 const crossChose = 'cross'
 const circleChose = 'circle'
 const cellElements = document.querySelectorAll('.cell')
@@ -235,13 +196,10 @@ function setFigure() {
   }
 }
 
-//функция добавляет к 
 function placeMark(cell, currentSymbol) {
   cell.classList.add(currentSymbol)
 }
 
-
-//функция для начала работы с матрицей и рисования крестиков и ноликов.
 function handleClick(e) {
   const cell = e.target
   console.log(e);
@@ -251,13 +209,16 @@ function handleClick(e) {
     currentSymbol = crossChose
   }
   console.log(currentSymbol);
-  var matrixСenter = cell
-  matrixСenter = matrixСenter.id.split('_');
-  var centerRow=matrixСenter[0]
-  var centerColumn=matrixСenter[1]
-  var matrixForChecking = creatMatrixForCheckingTheWinner(centerRow, centerColumn, currentSymbol)
+  let handleCell = cell
+  handleCell = handleCell.id.split('_');
+  let centerRow=handleCell[0]
+  let centerColumn=handleCell[1]
+  let matrixForChecking = creatMatrixForCheckingTheWinner(centerRow, centerColumn, currentSymbol)
+  let checkWin = rowCheck(matrixForChecking, currentSymbol)||columnCheck(matrixForChecking, currentSymbol)||rightDiagonalCheck(matrixForChecking, currentSymbol)||leftDiagonalCheck(matrixForChecking, currentSymbol);
+  
   placeMark(cell, currentSymbol)
-  if (rowCheck(matrixForChecking, currentSymbol)||columnCheck(matrixForChecking, currentSymbol)||rightDiagonalCheck(matrixForChecking, currentSymbol)||leftDiagonalCheck(matrixForChecking, currentSymbol)) {
+  console.log(checkDraw(centerRow, centerColumn, currentSymbol))
+  if (checkWin) {
     endGame(false, currentSymbol)
   } //else is (checkDraw()) {endGame(true)} 
     else {
@@ -266,7 +227,6 @@ function handleClick(e) {
   }
 }
 
-//смена хода
 function swapTurns() {
   playerTurn = !playerTurn
 }
@@ -277,20 +237,13 @@ function endGame(draw) {
   if (draw) {
     winningMessageText.innerText = 'DRAW!'
   } else {
-    if (currentSymbol=circleChose) {
-      winningMessageText.innerText = 'CIRCLE WINS!'
-    } else {
+    if (currentSymbol==crossChose) {
       winningMessageText.innerText = 'CROSS WINS!'
+    } else {
+      winningMessageText.innerText = 'CIRCLE WINS!'
     }
   }
   winningMessage.classList.add('show')
 }
 
 
-/**
-
-// надо придумать вариант для ничьи.
-function checkDraw() {
-}
-
-**/
