@@ -168,15 +168,14 @@ const cellElements = document.querySelectorAll('.cell')
 const winningMessage = document.getElementById('winningMessage')
 const restartButton = document.getElementById('restartButton')
 const winningMessageText = document.getElementById('winningMessageText')
-let playerTurn
-let currentSymbol
+let playerTurn;
+let currentSymbol;
 
 
 
 function startGame() {
   cellElements.forEach(cell => {
-    cell.classList.remove(crossChose)
-    cell.classList.remove(circleChose)
+    cell.style.backgroundColor = "";
     cell.removeEventListener('click', handleClick)
     cell.addEventListener('click', handleClick, { once: true })
   })
@@ -217,7 +216,6 @@ function handleClick(e) {
   let checkWin = rowCheck(matrixForChecking, currentSymbol)||columnCheck(matrixForChecking, currentSymbol)||rightDiagonalCheck(matrixForChecking, currentSymbol)||leftDiagonalCheck(matrixForChecking, currentSymbol);
   
   placeMark(cell, currentSymbol)
-  console.log(checkDraw(centerRow, centerColumn, currentSymbol))
   if (checkWin) {
     endGame(false, currentSymbol)
   } //else is (checkDraw()) {endGame(true)} 
