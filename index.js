@@ -87,7 +87,7 @@ function rowCheck(matrixForChecking, currentSymbol) {
   
   var count = 0;
   for (var i = 0; i < arrayForCheck.length; i++) {
-      if (arrayForCheck[i] != "cell "+currentSymbol) {
+    if (arrayForCheck[i] != "cell "+currentSymbol) {
         count = 0;
       } else {
         count += 1;
